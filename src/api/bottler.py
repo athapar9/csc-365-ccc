@@ -2,6 +2,8 @@ from fastapi import APIRouter, Depends
 from enum import Enum
 from pydantic import BaseModel
 from src.api import auth
+import sqlalchemy
+from src import database as db
 
 router = APIRouter(
     prefix="/bottler",
@@ -16,6 +18,8 @@ class PotionInventory(BaseModel):
 @router.post("/deliver")
 def post_deliver_bottles(potions_delivered: list[PotionInventory]):
     """ """
+    with db.engine.begin() as connection:
+        result = connection.execute(sql_to_execute)
     print(potions_delivered)
 
     return "OK"
@@ -26,6 +30,8 @@ def get_bottle_plan():
     """
     Go from barrel to bottle.
     """
+    with db.engine.begin() as connection:
+        result = connection.execute(sql_to_execute)
 
     # Each bottle has a quantity of what proportion of red, blue, and
     # green potion to add.

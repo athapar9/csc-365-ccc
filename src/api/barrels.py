@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from src.api import auth
+import sqlalchemy
+from src import database as db
 
 router = APIRouter(
     prefix="/barrels",
@@ -20,6 +22,8 @@ class Barrel(BaseModel):
 @router.post("/deliver")
 def post_deliver_barrels(barrels_delivered: list[Barrel]):
     """ """
+    with db.engine.begin() as connection:
+        result = connection.execute(sql_to_execute)
     print(barrels_delivered)
 
     return "OK"
@@ -28,6 +32,8 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
 @router.post("/plan")
 def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     """ """
+    with db.engine.begin() as connection:
+        result = connection.execute(sql_to_execute)
     print(wholesale_catalog)
 
     return [
