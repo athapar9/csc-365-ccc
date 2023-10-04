@@ -19,8 +19,8 @@ def get_catalog():
     num_red_potions = first_row.num_red_potions
 
 
-    if num_red_potions == []:
-        return 0
+    if num_red_potions == 0:
+        return []
 
     return [
             {
