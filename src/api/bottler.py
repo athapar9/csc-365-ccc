@@ -27,9 +27,9 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
         cur_red_ml = first_row.num_red_ml
         red_potions = first_row.num_red_potions
 
-        for bottle in potions_delivered:
-            cur_red_ml -= bottle.potion_type[0] * bottle.quantity
-            red_potions += bottle.quantity
+        for potions in potions_delivered:
+            cur_red_ml -= 100 * potions.quantity
+            red_potions += potions.quantity
     
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_ml = :cur_red_ml, num_red_potions = :red_potions"), {"cur_red_ml" : cur_red_ml, "red_potions": red_potions})
 
