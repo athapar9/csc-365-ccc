@@ -29,6 +29,18 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
         first_row = result.first()
         cur_red_ml = first_row.num_red_ml
         gold_amount = first_row.gold
+        # cur_green_ml = first_row.num_green_ml
+        # cur_blue_ml = first_row.num_blue
+        # for barrel in barrels_delivered:
+        #     if "RED" in barrel.sku:
+        #         cur_red_ml += barrel.ml_per_barrel * barrel.quantity
+        #         gold_amount -= barrel.price * barrel.quantity
+        #     if "BLUE" in barrel.sku:
+        #         cur_blue_ml += barrel.ml_per_barrel * barrel.quantity
+        #         gold_amount -= barrel.price * barrel.quantity
+        #     if "GREEN" in barrel.sku:
+        #         cur_green_ml += barrel.ml_per_barrel * barrel.quantity
+        #         gold_amount -= barrel.price * barrel.quantity
 
         for barrel in barrels_delivered:
             cur_red_ml += barrel.ml_per_barrel * barrel.quantity
@@ -54,12 +66,13 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     if num_red_potions < 10:
         # for each barrel in wholesale_catalog:
         for barrel in wholesale_catalog:
-            if gold_amount >= barrel.price * barrel.quantity:
-                return [
-                    {
-                        "sku": "SMALL_RED_BARREL",
-                        "quantity": 1,
-                    }
-                ]
-            else:
-                return []
+            if barrel.sku == "SMALL_RED_BARREL":
+                if gold_amount >= barrel.price * 1:
+                    return [
+                        {
+                            "sku": "SMALL_RED_BARREL",
+                            "quantity": 1,
+                        }
+                    ]
+                else:
+                    return []
