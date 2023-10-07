@@ -20,7 +20,7 @@ def reset():
     #update and then set 
     #update num_potions to 0 and ml to 0
     with db.engine.begin() as connection:
-        connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_potions = 0"))
+        connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_potions = 217"))
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET gold = 100"))
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_ml = 0"))
 
