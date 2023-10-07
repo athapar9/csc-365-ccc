@@ -14,13 +14,13 @@ router = APIRouter(
 @router.get("/inventory")
 def get_inventory():
     """ """
-    #just select and then set local vars to wtv is in the database
-    # with db.engine.begin() as connection:
-    #     connection.execute(sqlalchemy.text("SELECT num_red_potions, gold, num_red_ml SET num_red_potions = "))
-    #     connection.execute(sqlalchemy.text("UPDATE global_inventory SET gold = 100"))
-    #     connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_ml = 0"))
+    with db.engine.begin() as connection:
+            result = connection.execute(sqlalchemy.text("SELECT * FROM global_inventory"))
+            first_row = result.first()
+    
+    return {"number_of_potions": {first_row.num_red_potions + first_row.num_blue_potions + first_row.num_green_potions}, \
+        "ml_in_barrels": {first_row.num_red_ml}, "gold": {first_row.gold}}
 
-    return {"number_of_potions": 0, "ml_in_barrels": 0, "gold": 100}
 
 class Result(BaseModel):
     gold_match: bool
