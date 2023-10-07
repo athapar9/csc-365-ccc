@@ -20,7 +20,7 @@ def get_catalog():
 
 
     if num_red_potions == 0:
-        return []
+        return 0
 
     return [
             {

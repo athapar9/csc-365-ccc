@@ -29,25 +29,34 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
         first_row = result.first()
         cur_red_ml = first_row.num_red_ml
         gold_amount = first_row.gold
-        # cur_green_ml = first_row.num_green_ml
-        # cur_blue_ml = first_row.num_blue
-        # for barrel in barrels_delivered:
-        #     if "RED" in barrel.sku:
-        #         cur_red_ml += barrel.ml_per_barrel * barrel.quantity
-        #         gold_amount -= barrel.price * barrel.quantity
-        #     if "BLUE" in barrel.sku:
-        #         cur_blue_ml += barrel.ml_per_barrel * barrel.quantity
-        #         gold_amount -= barrel.price * barrel.quantity
-        #     if "GREEN" in barrel.sku:
-        #         cur_green_ml += barrel.ml_per_barrel * barrel.quantity
-        #         gold_amount -= barrel.price * barrel.quantity
+   
 
         for barrel in barrels_delivered:
             cur_red_ml += barrel.ml_per_barrel * barrel.quantity
             gold_amount -= barrel.price * barrel.quantity
     
-        connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_ml = :cur_red_ml, gold = :gold_amount"), {"cur_red_ml" : cur_red_ml, "gold_amount": gold_amount})
-    return "OK"
+        connection.execute(sqlalchemy.text("UPDATE global_inventory SET gold = :gold_amount"), [{"gold_amount": gold_amount}])
+        connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_ml = :cur_red_ml"), [{"cur_red_ml" : cur_red_ml}])
+        return "OK"
+
+    #    # update database values?
+    # with db.engine.begin() as connection:
+    #         #get original vals
+    #         result = connection.execute(sqlalchemy.text("SELECT num_red_ml, gold FROM global_inventory"))
+    #         first_row = result.first()
+
+    #         gold_available = first_row.gold
+    #         red_ml = first_row.num_red_ml
+
+    #         #update value
+    #         for barrel in barrels_delivered:
+    #             red_ml += barrel.ml_per_barrel * barrel.quantity
+    #             gold_available -= barrel.price * barrel.quantity
+
+    #         connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_ml = :red_ml, gold = :gold_available"), 
+    # {"red_ml": red_ml, "gold_available": gold_available})
+        
+    # return "OK"
 
 # Gets called once a day
 @router.post("/plan")
@@ -64,15 +73,21 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     
     print(f"num_red_potions: {num_red_potions}; Gold: {gold_amount}")
     if num_red_potions < 10:
-        # for each barrel in wholesale_catalog:
-        for barrel in wholesale_catalog:
-            if barrel.sku == "SMALL_RED_BARREL":
-                if gold_amount >= barrel.price * 1:
-                    return [
-                        {
-                            "sku": "SMALL_RED_BARREL",
-                            "quantity": 1,
-                        }
-                    ]
-                else:
-                    return []
+            # for each barrel in wholesale_catalog:
+            for barrel in wholesale_catalog:
+                if barrel.sku == "SMALL_RED_BARREL":
+                    quantity = 0
+                    if gold_amount >= barrel.price * 1:
+                        barrels_purchased += 1
+                        quantity += 1
+                        gold_amount -= barrel.price
+                return [
+                    {
+                        "sku": "SMALL_RED_BARREL",
+                        "quantity": 1,
+                    }
+                ]
+            else:
+                return []
+
+                
