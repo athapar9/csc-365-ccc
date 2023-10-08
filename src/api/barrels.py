@@ -50,14 +50,12 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_blue_ml = :cur_blue_ml"), [{"cur_blue_ml" : cur_blue_ml}])
         return "OK"
 
-  
-
 # Gets called once a day
 @router.post("/plan")
 def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     """ """
     print(wholesale_catalog)
-
+    
     with db.engine.begin() as connection:
         result = connection.execute(sqlalchemy.text("SELECT num_red_potions, num_blue_potions, num_green_potions, gold FROM global_inventory"))
     # print(f"catalog result: {result}")
@@ -108,7 +106,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                             "quantity": barrels_purchased,
                         })
         #GREEN
-        elif "green" in barrel.sku.lower():
+        if "green" in barrel.sku.lower():
             if cur_green_potions < 10:
                 while cur_gold >= barrel.price:
     

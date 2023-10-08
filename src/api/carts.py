@@ -21,20 +21,19 @@ def create_cart(new_cart: NewCart):
     """ """
     #counter to update cart_id
     #add new entry
+
+    print(f"create_cart: new_cart {new_cart}")
     cart_id = 0
- 
-    for cart in new_cart:
-        if cart not in cart_dict:
-            cart_dict[cart_id] += 1
-        else:
-            cart_dict[cart_id] = 0
+    while cart_id in cart_ids:
+        cart_id += 1
+    cart_dict[cart_id] = {"new_cart":new_cart}
     return {"cart_id": cart_id}
 
 @router.get("/{cart_id}")
 def get_cart(cart_id: int):
     """ """
     #displaying cart
-    return cart_dict
+    return cart_dict[cart_id]
 
 
 class CartItem(BaseModel):
@@ -44,8 +43,6 @@ class CartItem(BaseModel):
 @router.post("/{cart_id}/items/{item_sku}")
 def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     """ """
-
-    cart_dict[cart_id][item_sku] = cart_item.quantity
     #similar to plan
     return "OK"
 
