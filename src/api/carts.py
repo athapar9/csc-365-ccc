@@ -24,7 +24,7 @@ def create_cart(new_cart: NewCart):
 
     print(f"create_cart: new_cart {new_cart}")
     cart_id = 0
-    while cart_id in cart_ids:
+    while cart_id in cart_dict:
         cart_id += 1
     cart_dict[cart_id] = {"new_cart":new_cart}
     return {"cart_id": cart_id}
