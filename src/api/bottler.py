@@ -112,13 +112,13 @@ def get_bottle_plan():
                 "quantity": cur_red_ml // 100,
             }
         )
-    if cur_blue_ml >= 100:
-        bottles.append(
-            {
-                "potion_type": [0, 0, 100, 0],
-                "quantity": cur_red_ml // 100,
-            }
-        )
+    # if cur_blue_ml >= 100:
+    #     bottles.append(
+    #         {
+    #             "potion_type": [0, 0, 100, 0],
+    #             "quantity": cur_red_ml // 100,
+    #         }
+    #     )
     # if cur_red_ml >= 100:
     #     bottles.append(
     #         {
