@@ -102,7 +102,7 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
  
 
     with db.engine.begin() as connection:
-        for item_sku, quantity in cur_cart:
+        for item_sku, quantity in cur_cart.items():
             result = connection.execute(sqlalchemy.text("SELECT num_red_potions, num_green_potions, \
                 num_blue_potions, gold FROM global_inventory"))
             first_row = result.first()
@@ -132,6 +132,11 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
                 tot_gold += quantity * 50
             else:
                 print(f"Item_sku Entered is Incorrect") 
+
+            print("totals post checkout; num_red_potions: {cur_red_potions}; \
+                num_blue_potions: {cur_blue_potions}, \
+                    num_green_potions: {cur_green_potions},\
+                         Gold: {tot_gold}")
 
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET gold = :tot_gold"), [{"tot_gold": tot_gold }])
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_potions = :cur_red_potions"), [{"cur_red_potions" : cur_red_potions}])
