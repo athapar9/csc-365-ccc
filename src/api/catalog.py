@@ -30,7 +30,7 @@ def get_catalog():
                     "sku": "RED_POTION_0",
                     "name": "red potion",
                     "quantity": red_potions_to_sell,
-                    "price": 50,
+                    "price": 1,
                     "potion_type": [100, 0, 0, 0],
                 })
         if green_potions_to_sell > 0:
@@ -39,8 +39,8 @@ def get_catalog():
                     "sku": "GREEN_POTION_0",
                     "name": "red potion",
                     "quantity": green_potions_to_sell,
-                    "price": 50,
-                    "potion_type": [100, 0, 0, 0],
+                    "price": 1,
+                    "potion_type": [0, 100, 0, 0],
                 })
         if blue_potions_to_sell > 0:
             catalog.append(
@@ -48,8 +48,8 @@ def get_catalog():
                     "sku": "BLUE_POTION_0",
                     "name": "red potion",
                     "quantity": blue_potions_to_sell,
-                    "price": 50,
-                    "potion_type": [100, 0, 0, 0],
+                    "price": 1,
+                    "potion_type": [0, 0, 100, 0],
                 })
     print(f"catalog:", catalog)
     return catalog
