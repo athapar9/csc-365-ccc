@@ -24,7 +24,6 @@ def create_cart(new_cart: NewCart):
     #counter to update cart_id
     #add new entry
     global cart_id
-    print(f"create_cart: new_cart {new_cart}")
     cart_id += 1
     cart_dict[cart_id] = {}
     print(f"cart dict:", cart_dict)
@@ -98,6 +97,8 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
     print(f"cur_cart", cur_cart)
     print(f"cart_id", cart_id)
     print(f"payment", cart_checkout)
+    gold_paid = 0
+    potions_bought = 0
     
  
 
@@ -119,17 +120,23 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
             if item_sku == "RED_POTION_0" and cur_red_potions >= quantity:
                 print(f"Proceed Red")
                 cur_red_potions -= quantity
-                tot_gold += quantity * 50
+                tot_gold += quantity * 500
+                potions_bought += quantity
+                gold_paid += quantity * 500
                 print(f"num_red_potions", cur_red_potions)
                 print(f"cur_gold", tot_gold)
             elif item_sku == "BLUE_POTION_0" and cur_blue_potions >= quantity:
                 print(f"Proceed Blue")
                 cur_blue_potions -= quantity
-                tot_gold += quantity * 50  
+                tot_gold += quantity * 50 
+                potions_bought += quantity
+                gold_paid += quantity * 50 
             elif item_sku == "GREEN_POTION_0" and cur_green_potions >= quantity:
                 print(f"Proceed Green")
                 cur_green_potions -= quantity
                 tot_gold += quantity * 50
+                potions_bought += quantity
+                gold_paid += quantity * 50
             else:
                 print(f"Item_sku Entered is Incorrect") 
 
@@ -143,6 +150,4 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_green_potions = :cur_green_potions"), [{"cur_green_potions" : cur_green_potions}])
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_blue_potions = :cur_blue_potions"), [{"cur_blue_potions" : cur_blue_potions}])
 
-            
-
-    return {"total_potions_bought": 1, "total_gold_paid": 1}
+    return {"total_potions_bought": potions_bought, "total_gold_paid": gold_paid}
