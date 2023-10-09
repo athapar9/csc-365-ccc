@@ -19,7 +19,7 @@ def get_catalog():
         red_potions_to_sell = first_row.num_red_potions
         green_potions_to_sell = first_row.num_green_potions
         blue_potions_to_sell = first_row.num_blue_potions
-        # print(f"catalog result: {result}")
+        print(f"catalog result: {result}")
 
         catalog = []
         # if num_red_potions == 0:
@@ -51,5 +51,6 @@ def get_catalog():
                     "price": 50,
                     "potion_type": [100, 0, 0, 0],
                 })
+    print(f"catalog:", catalog)
     return catalog
         

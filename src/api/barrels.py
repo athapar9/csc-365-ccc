@@ -58,7 +58,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     
     with db.engine.begin() as connection:
         result = connection.execute(sqlalchemy.text("SELECT num_red_potions, num_blue_potions, num_green_potions, gold FROM global_inventory"))
-    # print(f"catalog result: {result}")
+    print(f"catalog result: {result}")
     first_row = result.first()
 
     #current status of all vars
@@ -142,5 +142,6 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                                 "sku": "SMALL_BLUE_BARREL",
                                 "quantity": barrels_purchased,
                             })
+    print(f"barrels", barrels)
     return barrels
         

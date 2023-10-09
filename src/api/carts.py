@@ -27,12 +27,14 @@ def create_cart(new_cart: NewCart):
     while cart_id in cart_dict:
         cart_id += 1
     cart_dict[cart_id] = {"new_cart":new_cart}
+    print(f"cart dict:", cart_dict)
     return {"cart_id": cart_id}
 
 @router.get("/{cart_id}")
 def get_cart(cart_id: int):
     """ """
     #displaying cart
+    print(f"cart id", cart_id)
     return cart_dict[cart_id]
 
 

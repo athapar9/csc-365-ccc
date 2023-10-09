@@ -34,6 +34,10 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
         cur_blue_ml = first_row.num_blue_ml
         cur_blue_potions = first_row.num_blue_potions
 
+        print(f"pre red: ", cur_red_potions)
+        print(f"pre blue: ", cur_blue_potions)
+        print(f"pre green: ", cur_green_potions)
+
         for potion in potions_delivered:
             if potion.potion_type == [0, 1, 0, 0]:
                 print("Delivering Green")
@@ -63,9 +67,9 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_blue_potions = :cur_blue_potions"), \
             [{"cur_blue_potions": cur_blue_potions}])
     
-        # print(f"final red: ", cur_red_potions)
-        # print(f"final blue: ", cur_blue_potions)
-        # print(f"final green: ", cur_green_potions)
+        print(f"final red: ", cur_red_potions)
+        print(f"final blue: ", cur_blue_potions)
+        print(f"final green: ", cur_green_potions)
 
     return "OK"
 
@@ -107,5 +111,5 @@ def get_bottle_plan():
                 "quantity": cur_red_ml // 100,
             }
         )
-    else:
-        return []
+    print(f"bottles:", bottles)
+    return bottles
