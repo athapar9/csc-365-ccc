@@ -55,14 +55,14 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
                     cur_blue_potions += potion.quantity
                 else: 
                     print(f"not enough blue,  try a smaller quantity")
-            if potion.potion_type == [100, 0, 0, 0] <= cur_red_ml:
-                if 100* potion.quantity <= cur_red_ml:
-                    print("Delivering Red")
-                    cur_red_ml -= 100 * potion.quantity
-                    cur_red_potions += potion.quantity
-                else:
-                    #fix these to errors later
-                    print(f"not enough red, try a smaller quantity")
+            # if potion.potion_type == [100, 0, 0, 0] <= cur_red_ml:
+            #     if 100* potion.quantity <= cur_red_ml:
+            #         print("Delivering Red")
+            #         cur_red_ml -= 100 * potion.quantity
+            #         cur_red_potions += potion.quantity
+            #     else:
+            #         #fix these to errors later
+            #         print(f"not enough red, try a smaller quantity")
 
         #update database
         print(f"final red ml: ", cur_red_ml)
