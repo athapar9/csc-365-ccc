@@ -37,22 +37,37 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
         print(f"pre red: ", cur_red_potions)
         print(f"pre blue: ", cur_blue_potions)
         print(f"pre green: ", cur_green_potions)
+        
 
         for potion in potions_delivered:
-            if potion.potion_type == [0, 1, 0, 0]:
+            if potion.potion_type == [0, 100, 0, 0]:
                 print("Delivering Green")
-                cur_green_ml -= 100 * potion.quantity
-                cur_green_potions += potion.quantity
-            if potion.potion_type == [0, 0, 1, 0]:
-                print("Delivering Blue")
-                cur_blue_ml -= 100 * potion.quantity
-                cur_blue_potions += potion.quantity
-            if potion.potion_type == [1, 0, 0, 0]:
-                print("Delivering Red")
-                cur_red_ml -= 100 * potion.quantity
-                cur_red_potions += potion.quantity
+                print(f"pre potion quan: ", potion.quantity)
+                if 100*potion.quantity <= cur_green_ml:
+                    cur_green_potions += potion.quantity
+                    cur_green_ml -= 100 * potion.quantity
+                else:
+                    print(f"not enough green, try a smaller quantity")
+            if potion.potion_type == [0, 0, 100, 0]:
+                if 100* potion.quantity <= cur_blue_ml:
+                    print("Delivering Blue")
+                    cur_blue_ml -= 100 * potion.quantity
+                    cur_blue_potions += potion.quantity
+                else: 
+                    print(f"not enough blue,  try a smaller quantity")
+            if potion.potion_type == [100, 0, 0, 0] <= cur_red_ml:
+                if 100* potion.quantity <= cur_red_ml:
+                    print("Delivering Red")
+                    cur_red_ml -= 100 * potion.quantity
+                    cur_red_potions += potion.quantity
+                else:
+                    #fix these to errors later
+                    print(f"not enough red, try a smaller quantity")
 
         #update database
+        print(f"final red ml: ", cur_red_ml)
+        print(f"final blue ml: ", cur_blue_ml)
+        print(f"final green ml: ", cur_green_ml)
 
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_ml = :cur_red_ml"), \
             [{"cur_red_ml": cur_red_ml}])
@@ -104,12 +119,12 @@ def get_bottle_plan():
                 "quantity": cur_red_ml // 100,
             }
         )
-    if cur_red_ml >= 100:
-        bottles.append(
-            {
-                "potion_type": [100, 0, 0, 0],
-                "quantity": cur_red_ml // 100,
-            }
-        )
+    # if cur_red_ml >= 100:
+    #     bottles.append(
+    #         {
+    #             "potion_type": [100, 0, 0, 0],
+    #             "quantity": cur_red_ml // 100,
+    #         }
+    #     )
     print(f"bottles:", bottles)
     return bottles
