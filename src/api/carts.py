@@ -48,36 +48,6 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     current_cart = cart_dict[cart_id]
     current_cart[item_sku] = cart_item.quantity
     print("current cart: ", current_cart)
-    
-    """ 
-    print(f"cart", cart)
-    print(f"quantity", cart_item)
-    with db.engine.begin() as connection:
-        result = connection.execute(sqlalchemy.text("SELECT num_red_potions, num_green_potions, \
-            num_blue_potions, num_blue_ml, gold FROM global_inventory"))
-        first_row = result.first()
-
-        num_red_potions = first_row.num_red_potions
-        num_green_potions = first_row.num_green_potions
-        num_blue_potions = first_row.num_blue_potions
-        cur_gold = first_row.gold
-        for items in cart: 
-            if item_sku == "RED_POTION_0" and num_red_potions >= cart_item.quantity:
-                print(f"Proceed Red")
-                # num_red_potions -= cart_item.quantity
-                # cur_gold += cart_item.quantity * 50
-                print(f"num_red_potions", num_red_potions)
-                print(f"cur_gold", cur_gold)
-            elif item_sku == "BLUE_POTION_0" and num_blue_potions >= cart_item.quantity:
-                print(f"Proceed Blue")
-                num_blue_potions -= cart_item.quantity
-                cur_gold += cart_item.quantity * 50  
-            elif item_sku == "GREEN_POTION_0" and num_green_potions >= cart_item.quantity:
-                print(f"Proceed Green")
-                num_green_potions -= cart_item.quantity
-                cur_gold += cart_item.quantity * 50
-            else:
-                print(f"Item_sku Entered is Incorrect") """
 
     return "OK"
 
@@ -94,13 +64,12 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
     # for items in current_cart:
 
     cur_cart = cart_dict[cart_id]
-    print(f"cur_cart", cur_cart)
-    print(f"cart_id", cart_id)
-    print(f"payment", cart_checkout)
     gold_paid = 0
     potions_bought = 0
     
- 
+    print(f"cur_cart", cur_cart)
+    print(f"cart_id", cart_id)
+    print(f"payment", cart_checkout)
 
     with db.engine.begin() as connection:
         for item_sku, quantity in cur_cart.items():
