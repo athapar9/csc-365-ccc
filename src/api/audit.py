@@ -27,7 +27,7 @@ def get_inventory():
             total_potions = red + green + blue
             total_ml = red_ml + green_ml + blue_ml
     
-    return {"number_of_potions": {total_potions}, "ml_in_barrels": {total_ml}, "gold": {tot_gold}}
+    return {"number_of_potions": total_potions, "ml_in_barrels": total_ml, "gold": tot_gold}
 
 
 class Result(BaseModel):
