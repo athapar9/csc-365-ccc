@@ -31,6 +31,9 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
         cur_blue_ml = first_row.num_blue_ml
         cur_green_ml = first_row.num_green_ml
         tot_gold = first_row.gold
+
+        print("totals pre barrels - num_red_ml:", cur_red_ml, \
+            "blue_ml:", cur_blue_ml, "green_ml:", cur_green_ml) 
    
 
         for barrel in barrels_delivered:
@@ -43,6 +46,9 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
                 if "blue" in barrel.sku.lower():
                     cur_blue_ml += barrel.ml_per_barrel * barrel.quantity
                     tot_gold -= barrel.price * barrel.quantity
+        
+        print("totals post barrels - num_red_ml:", cur_red_ml, \
+            "blue_ml:", cur_blue_ml, "green_ml:", cur_green_ml)
 
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET gold = :tot_gold"), [{"tot_gold": tot_gold }])
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_ml = :cur_red_ml"), [{"cur_red_ml" : cur_red_ml}])
@@ -77,11 +83,6 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     tot_blue_ml = 0
 
     barrels = []
-    
-    print(f"pre num_red_potions: {cur_red_potions}; \
-        pre num_blue_potions: {cur_blue_potions},\
-             pre num_green_potions: {cur_green_potions}, \
-                 pre Gold: {cur_gold}")
 
     #RED
     for barrel in wholesale_catalog:

@@ -26,14 +26,12 @@ def create_cart(new_cart: NewCart):
     global cart_id
     cart_id += 1
     cart_dict[cart_id] = {}
-    print(f"cart dict:", cart_dict)
     return {"cart_id": cart_id}
 
 @router.get("/{cart_id}")
 def get_cart(cart_id: int):
     """ """
     #displaying cart
-    print(f"cart id", cart_id)
     return cart_dict[cart_id]
 
 
@@ -67,9 +65,7 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
     gold_paid = 0
     potions_bought = 0
 
-    print(f"cur_cart", cur_cart)
-    print(f"cart_id", cart_id)
-    print(f"payment", cart_checkout)
+    print(f"CURRENT CART", cur_cart)
 
     with db.engine.begin() as connection:
         for item_sku, quantity in cur_cart.items():
@@ -83,23 +79,20 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
             tot_gold = first_row.gold
 
             if item_sku == "RED_POTION_0" and cur_red_potions >= quantity:
-                print(f"Proceed Red")
-                print(f"num_red_potions pre:", cur_red_potions)
+                print(f"num_red_potions pre checkout:", cur_red_potions)
                 cur_red_potions -= quantity
                 tot_gold += quantity * 50
                 potions_bought += quantity
                 gold_paid += quantity * 50
                 print(f"cur_gold", tot_gold)
             elif item_sku == "BLUE_POTION_0" and cur_blue_potions >= quantity:
-                print(f"Proceed Blue")
-                print(f"num_red_potions pre", cur_blue_potions)
+                print(f"num_blue_potions pre checkout:", cur_blue_potions)
                 cur_blue_potions -= quantity
                 tot_gold += quantity * 10 
                 potions_bought += quantity
                 gold_paid += quantity * 10 
             elif item_sku == "GREEN_POTION_0" and cur_green_potions >= quantity:
-                print(f"Proceed Green")
-                print(f"num_green_potions pre", cur_green_potions)
+                print(f"num_green_potions pre checkout", cur_green_potions)
                 cur_green_potions -= quantity
                 tot_gold += quantity * 50
                 potions_bought += quantity
