@@ -66,7 +66,7 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
     cur_cart = cart_dict[cart_id]
     gold_paid = 0
     potions_bought = 0
-    
+
     print(f"cur_cart", cur_cart)
     print(f"cart_id", cart_id)
     print(f"payment", cart_checkout)
@@ -118,5 +118,5 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_potions = :cur_red_potions"), [{"cur_red_potions" : cur_red_potions}])
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_green_potions = :cur_green_potions"), [{"cur_green_potions" : cur_green_potions}])
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_blue_potions = :cur_blue_potions"), [{"cur_blue_potions" : cur_blue_potions}])
-
+    print("total_potions_bought:", {potions_bought}, "total_gold_paid:", {gold_paid})
     return {"total_potions_bought": potions_bought, "total_gold_paid": gold_paid}

@@ -114,6 +114,7 @@ def get_bottle_plan():
             }
         )
     if cur_blue_ml >= 100:
+        print("BLUE ML")
         bottles.append(
             {
                 "potion_type": [0, 0, 100, 0],
