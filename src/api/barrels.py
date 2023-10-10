@@ -93,7 +93,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     #             print("potential red: ", purchased_red_potions)
     #             print("barrel price: ", barrel.price)
             
-    #         if cur_gold >= barrel.price * barrel.quantity:
+    #         if cur_gold >= barrel.price * barrel.quantity and purchased_red_potions < 10:
     #             print("BUYING RED BARRELS:", barrel.quantity)
     #             barrels_purchased += barrel.quantity
     #             barrel.quantity -= barrels_purchased
@@ -111,7 +111,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
         #BLUE
         if "blue" in barrel.sku.lower():
             if cur_blue_potions < 10:
-                if cur_gold >= barrel.price * barrel.quantity:
+                if cur_gold >= barrel.price * barrel.quantity and purchased_blue_potions < 10:
                     print("BUYING BLUE BARREL:", barrel.quantity)
                     barrels_purchased += barrel.quantity
                     barrel.quantity -= barrels_purchased
@@ -127,7 +127,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
         # GREEN
         elif "green" in barrel.sku.lower():
             if cur_green_potions < 10:
-                if cur_gold >= barrel.price * barrel.quantity:
+                if cur_gold >= barrel.price * barrel.quantity and purchased_green_potions < 10:
                     print("BUYING GREEN BARRELS:", barrel.quantity)
                     barrels_purchased += barrel.quantity
                     barrel.quantity -= barrels_purchased
