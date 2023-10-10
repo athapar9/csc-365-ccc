@@ -65,9 +65,10 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
             #         print(f"not enough red, try a smaller quantity")
 
         #update database
-        print(f"final red ml: ", cur_red_ml)
-        print(f"final blue ml: ", cur_blue_ml)
-        print(f"final green ml: ", cur_green_ml)
+        print("totals pre bottler; num_red_ml: {cur_red_ml}; \
+                num_blue_ml: {cur_blue_ml}, \
+                    num_green_ml: {cur_green_ml},\
+                         Gold: {tot_gold}")
 
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_ml = :cur_red_ml"), \
             [{"cur_red_ml": cur_red_ml}])
@@ -82,9 +83,10 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_blue_potions = :cur_blue_potions"), \
             [{"cur_blue_potions": cur_blue_potions}])
     
-        print(f"final red: ", cur_red_potions)
-        print(f"final blue: ", cur_blue_potions)
-        print(f"final green: ", cur_green_potions)
+        print("totals post bottler; num_red_potions: {cur_red_potions}; \
+                num_blue_potions: {cur_blue_potions}, \
+                    num_green_potions: {cur_green_potions},\
+                         Gold: {tot_gold}")
 
     return "OK"
 
