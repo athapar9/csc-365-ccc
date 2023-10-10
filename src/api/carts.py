@@ -86,9 +86,9 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
                 print(f"Proceed Red")
                 print(f"num_red_potions pre:", cur_red_potions)
                 cur_red_potions -= quantity
-                tot_gold += quantity * 100
+                tot_gold += quantity * 50
                 potions_bought += quantity
-                gold_paid += quantity * 100
+                gold_paid += quantity * 50
                 print(f"cur_gold", tot_gold)
             elif item_sku == "BLUE_POTION_0" and cur_blue_potions >= quantity:
                 print(f"Proceed Blue")
