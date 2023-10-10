@@ -81,27 +81,25 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
             cur_green_potions = first_row.num_green_potions
             cur_blue_potions = first_row.num_blue_potions
             tot_gold = first_row.gold
-            print("totals before checkout num_red_potions:", cur_red_potions) 
-            print("num_blue_potions:", cur_blue_potions)
-            print("num_green_potions:", cur_green_potions)
-            print("Gold:", tot_gold)
 
             if item_sku == "RED_POTION_0" and cur_red_potions >= quantity:
                 print(f"Proceed Red")
+                print(f"num_red_potions pre:", cur_red_potions)
                 cur_red_potions -= quantity
-                tot_gold += quantity * 50
+                tot_gold += quantity * 100
                 potions_bought += quantity
-                gold_paid += quantity * 50
-                print(f"num_red_potions", cur_red_potions)
+                gold_paid += quantity * 100
                 print(f"cur_gold", tot_gold)
             elif item_sku == "BLUE_POTION_0" and cur_blue_potions >= quantity:
                 print(f"Proceed Blue")
+                print(f"num_red_potions pre", cur_blue_potions)
                 cur_blue_potions -= quantity
                 tot_gold += quantity * 50 
                 potions_bought += quantity
                 gold_paid += quantity * 50 
             elif item_sku == "GREEN_POTION_0" and cur_green_potions >= quantity:
                 print(f"Proceed Green")
+                print(f"num_green_potions pre", cur_green_potions)
                 cur_green_potions -= quantity
                 tot_gold += quantity * 50
                 potions_bought += quantity

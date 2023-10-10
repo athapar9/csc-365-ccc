@@ -34,17 +34,16 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
         cur_blue_ml = first_row.num_blue_ml
         cur_blue_potions = first_row.num_blue_potions
 
-        print("totals pre bottler; num_red_potions: {cur_red_potions}; \
-                        num_blue_potions: {cur_blue_potions}, \
-                            num_green_potions: {cur_green_potions},\
-                                Gold: {tot_gold}")
+        print("totals pre bottler - num_red_ml:", cur_red_ml) 
+        print("totals pre bottler - num_blue_ml:", cur_blue_ml) 
+        print("totals pre bottler - num_green_ml:", cur_green_ml) 
         
 
         for potion in potions_delivered:
             if potion.potion_type == [0, 100, 0, 0]:
-                print("Delivering Green")
                 print(f"pre potion quan: ", potion.quantity)
                 if 100*potion.quantity <= cur_green_ml:
+                    print("Delivering Green")
                     cur_green_potions += potion.quantity
                     cur_green_ml -= 100 * potion.quantity
                 else:
@@ -66,10 +65,9 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
             #         print(f"not enough red, try a smaller quantity")
 
         #update database
-        print("totals post bottler; num_red_ml: {cur_red_ml}; \
-                num_blue_ml: {cur_blue_ml}, \
-                    num_green_ml: {cur_green_ml},\
-                         Gold: {tot_gold}")
+        print("totals post bottler - num_red_ml:", cur_red_ml) 
+        print("totals post bottler - num_blue_ml:", cur_blue_ml) 
+        print("totals post bottler - num_green_ml:", cur_green_ml) 
 
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_ml = :cur_red_ml"), \
             [{"cur_red_ml": cur_red_ml}])
