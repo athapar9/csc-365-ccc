@@ -127,9 +127,9 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
 
         #BLUE
         if "blue" in barrel.sku.lower():
+            print("BLUE BOTTLE")
             if cur_green_potions < 10:
                 while cur_gold >= barrel.price:
-    
                     barrels_purchased += 1
                     if barrels_purchased > barrel.quantity:
                         barrels_purchased = barrel.quantity
