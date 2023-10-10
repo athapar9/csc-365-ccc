@@ -20,9 +20,9 @@ def get_inventory():
             red = first_row.num_red_potions
             green = first_row.num_green_potions
             blue = first_row.num_blue_potions
-            red_ml = first_row.num_red_potions
-            green_ml = first_row.num_green_potions
-            blue_ml = first_row.num_blue_potions
+            red_ml = first_row.num_red_ml
+            green_ml = first_row.num_green_ml
+            blue_ml = first_row.num_blue_ml
             tot_gold = first_row.gold
             total_potions = red + green + blue
             total_ml = red_ml + green_ml + blue_ml
