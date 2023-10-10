@@ -82,16 +82,16 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
             cur_blue_potions = first_row.num_blue_potions
             tot_gold = first_row.gold
             print("totals before checkout; num_red_potions: {cur_red_potions}; \
-                num_blue_potions: {cur_blue_potions}, \
-                    num_green_potions: {cur_green_potions},\
-                         Gold: {tot_gold}")
+            num_blue_potions: {cur_blue_potions}, \
+            num_green_potions: {cur_green_potions},\
+            Gold: {tot_gold}")
 
             if item_sku == "RED_POTION_0" and cur_red_potions >= quantity:
                 print(f"Proceed Red")
                 cur_red_potions -= quantity
-                tot_gold += quantity * 500
+                tot_gold += quantity * 50
                 potions_bought += quantity
-                gold_paid += quantity * 500
+                gold_paid += quantity * 50
                 print(f"num_red_potions", cur_red_potions)
                 print(f"cur_gold", tot_gold)
             elif item_sku == "BLUE_POTION_0" and cur_blue_potions >= quantity:
@@ -110,9 +110,9 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
                 print(f"Item_sku Entered is Incorrect") 
 
             print("totals post checkout; num_red_potions: {cur_red_potions}; \
-                num_blue_potions: {cur_blue_potions}, \
-                    num_green_potions: {cur_green_potions},\
-                         Gold: {tot_gold}")
+            num_blue_potions: {cur_blue_potions}, \
+            num_green_potions: {cur_green_potions},\
+            Gold: {tot_gold}")
 
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET gold = :tot_gold"), [{"tot_gold": tot_gold }])
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_potions = :cur_red_potions"), [{"cur_red_potions" : cur_red_potions}])
