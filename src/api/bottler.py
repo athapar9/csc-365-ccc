@@ -34,9 +34,10 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
         cur_blue_ml = first_row.num_blue_ml
         cur_blue_potions = first_row.num_blue_potions
 
-        print(f"pre red: ", cur_red_potions)
-        print(f"pre blue: ", cur_blue_potions)
-        print(f"pre green: ", cur_green_potions)
+        print("totals pre bottler; num_red_potions: {cur_red_potions}; \
+                        num_blue_potions: {cur_blue_potions}, \
+                            num_green_potions: {cur_green_potions},\
+                                Gold: {tot_gold}")
         
 
         for potion in potions_delivered:
@@ -65,7 +66,7 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
             #         print(f"not enough red, try a smaller quantity")
 
         #update database
-        print("totals pre bottler; num_red_ml: {cur_red_ml}; \
+        print("totals post bottler; num_red_ml: {cur_red_ml}; \
                 num_blue_ml: {cur_blue_ml}, \
                     num_green_ml: {cur_green_ml},\
                          Gold: {tot_gold}")
