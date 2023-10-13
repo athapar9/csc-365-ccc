@@ -23,37 +23,39 @@ class Barrel(BaseModel):
 def post_deliver_barrels(barrels_delivered: list[Barrel]):
     """ """
     print(barrels_delivered)
-
-    with db.engine.begin() as connection:
-        result = connection.execute(sqlalchemy.text("SELECT num_red_ml, num_blue_ml, num_green_ml, gold FROM global_inventory"))
-        first_row = result.first()
-        cur_red_ml = first_row.num_red_ml
-        cur_blue_ml = first_row.num_blue_ml
-        cur_green_ml = first_row.num_green_ml
-        tot_gold = first_row.gold
-
-        print("totals pre barrels - num_red_ml:", cur_red_ml, \
-            "blue_ml:", cur_blue_ml, "green_ml:", cur_green_ml) 
    
+    tot_gold = 0
+    red_ml = 0
+    blue_ml = 0
+    green_ml = 0
+    dark_ml = 0
 
-        for barrel in barrels_delivered:
-                if "red" in barrel.sku.lower():
-                    cur_red_ml += barrel.ml_per_barrel * barrel.quantity
-                    tot_gold -= barrel.price * barrel.quantity
-                if "green" in barrel.sku.lower():
-                    cur_green_ml += barrel.ml_per_barrel * barrel.quantity
-                    tot_gold -= barrel.price * barrel.quantity
-                if "blue" in barrel.sku.lower():
-                    cur_blue_ml += barrel.ml_per_barrel * barrel.quantity
-                    tot_gold -= barrel.price * barrel.quantity
-        
-        print("totals post barrels - num_red_ml:", cur_red_ml, \
-            "blue_ml:", cur_blue_ml, "green_ml:", cur_green_ml)
+    for barrel in barrels_delivered:
+        tot_gold += barrel.price * barrel.quantity
+        if barrel.potion_type == [1,0,0,0]:
+            red_ml += barrel.ml_per_barrel * barrel.quantity
+        elif barrel.potion_type == [0,1,0,0]:
+            green_ml += barrel.ml_per_barrel * barrel.quantity
+        elif barrel.potion_type == [0,0,1,0]:
+            blue_ml += barrel.ml_per_barrel * barrel.quantity
+        elif barrel.potion_type == [0,0,0,1]:
+            dark_ml += barrel.ml_per_barrel * barrel.quantity
+        else:
+            raise Exception("Invalid potion type")
 
-        connection.execute(sqlalchemy.text("UPDATE global_inventory SET gold = :tot_gold"), [{"tot_gold": tot_gold }])
-        connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_ml = :cur_red_ml"), [{"cur_red_ml" : cur_red_ml}])
-        connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_green_ml = :cur_green_ml"), [{"cur_green_ml" : cur_green_ml}])
-        connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_blue_ml = :cur_blue_ml"), [{"cur_blue_ml" : cur_blue_ml}])
+        print(f"gold_paid: {tot_gold} red_ml: {red_ml} blue_ml: {blue_ml} green_ml: {green_ml} dark_ml: {dark_ml}")
+        with db.engine.begin() as connection:
+            connection.execute(
+                sqlalchemy.text(
+                    """
+                    UPDATE global_inventory SET 
+                    red_ml = red_ml + :red_ml,
+                    green_ml = green_ml + :green_ml,
+                    blue_ml = blue_ml + :blue_ml,
+                    dark_ml = dark_ml + :dark_ml,
+                    gold = gold - :tot_gold
+                    """),
+                [{"red_ml": red_ml, "green_ml": green_ml, "blue_ml": blue_ml, "dark_ml": dark_ml, "tot_gold": tot_gold}])
         return "OK"
 
 # Gets called once a day
@@ -74,7 +76,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     cur_gold = first_row.gold
 
     #barrels to buy
-    purchased_red_potions = 217
+    purchased_red_potions = 0
     purchased_green_potions = 0
     purchased_blue_potions = 0
 
@@ -87,28 +89,21 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     #RED
     for barrel in wholesale_catalog:
         barrels_purchased = 0
-    #     if "red" in barrel.sku.lower():
-    #         if cur_red_potions < 10:
-    #             print("cur gold: ", cur_gold)
-    #             print("quantity: ", barrels_purchased)
-    #             print("potential red: ", purchased_red_potions)
-    #             print("barrel price: ", barrel.price)
-            
-    #         if cur_gold >= barrel.price * barrel.quantity and purchased_red_potions < 10:
-    #             print("BUYING RED BARRELS:", barrel.quantity)
-    #             barrels_purchased += barrel.quantity
-    #             barrel.quantity -= barrels_purchased
-    #             cur_gold -= barrel.price
-    #             tot_red_ml += barrel.ml_per_barrel
-    #             purchased_red_potions = tot_red_ml // 100
-    #             print("PURCHASED RED BARRELS:", barrels_purchased)
-    #             if barrels_purchased > 0:
-    #                 barrels.append(
-    #                     {
-    #                         "sku": "SMALL_RED_BARREL",
-    #                         "quantity": barrels_purchased,
-    #                     })
-
+        if "red" in barrel.sku.lower():
+                if cur_red_potions < 10:
+                    if cur_gold >= barrel.price * barrel.quantity and purchased_red_potions < 10:
+                        print("BUYING RED BARREL:", barrel.quantity)
+                        barrels_purchased += barrel.quantity
+                        barrel.quantity -= barrels_purchased
+                        cur_gold -= barrel.price
+                        tot_red_ml += barrel.ml_per_barrel
+                        purchased_red_potions = tot_red_ml // 100
+                        if barrels_purchased > 0:
+                            barrels.append(
+                                {
+                                    "sku": "SMALL_RED_BARREL",
+                                    "quantity": barrels_purchased,
+                                })
         #BLUE
         if "blue" in barrel.sku.lower():
             if cur_blue_potions < 10:
