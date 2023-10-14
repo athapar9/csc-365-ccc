@@ -65,24 +65,14 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     print(wholesale_catalog)
     
     with db.engine.begin() as connection:
-        result = connection.execute(sqlalchemy.text("SELECT num_red_potions, num_blue_potions, num_green_potions, gold FROM global_inventory"))
+        result = connection.execute(sqlalchemy.text("SELECT red_ml, blue_ml, green_ml, gold FROM global_inventory"))
     print(f"catalog result: {result}")
     first_row = result.first()
 
-    #current status of all vars
-    cur_red_potions = first_row.num_red_potions
-    cur_blue_potions = first_row.num_blue_potions
-    cur_green_potions = first_row.num_green_potions
-    cur_gold = first_row.gold
-
-    #barrels to buy
-    purchased_red_potions = 0
-    purchased_green_potions = 0
-    purchased_blue_potions = 0
-
-    tot_red_ml = 0
-    tot_green_ml = 0
-    tot_blue_ml = 0
+    tot_gold = first_row.gold
+    red_ml = first_row.red_ml
+    green_ml = first_row.green_ml
+    blue_ml = first_row.blue_ml
 
     barrels = []
 
@@ -90,52 +80,45 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     for barrel in wholesale_catalog:
         barrels_purchased = 0
         if "red" in barrel.sku.lower():
-                if cur_red_potions < 10:
-                    if cur_gold >= barrel.price * barrel.quantity and purchased_red_potions < 10:
-                        print("BUYING RED BARREL:", barrel.quantity)
-                        barrels_purchased += barrel.quantity
-                        barrel.quantity -= barrels_purchased
-                        cur_gold -= barrel.price
-                        tot_red_ml += barrel.ml_per_barrel
-                        purchased_red_potions = tot_red_ml // 100
-                        if barrels_purchased > 0:
-                            barrels.append(
-                                {
-                                    "sku": "SMALL_RED_BARREL",
-                                    "quantity": barrels_purchased,
-                                })
+            if tot_gold >= barrel.price * barrel.quantity:
+                print("BUYING RED BARREL:", barrel.quantity)
+                barrels_purchased += barrel.quantity
+                barrel.quantity -= barrels_purchased
+                tot_gold -= barrel.price
+                red_ml += barrel.ml_per_barrel
+                if barrels_purchased > 0:
+                    barrels.append(
+                        {
+                            "sku": barrel.sku,
+                            "quantity": barrels_purchased,
+                        })
         #BLUE
         if "blue" in barrel.sku.lower():
-            if cur_blue_potions < 10:
-                if cur_gold >= barrel.price * barrel.quantity and purchased_blue_potions < 10:
-                    print("BUYING BLUE BARREL:", barrel.quantity)
-                    barrels_purchased += barrel.quantity
-                    barrel.quantity -= barrels_purchased
-                    cur_gold -= barrel.price
-                    tot_blue_ml += barrel.ml_per_barrel
-                    purchased_blue_potions = tot_blue_ml // 100
-                    if barrels_purchased > 0:
-                        barrels.append(
-                            {
-                                "sku": "SMALL_BLUE_BARREL",
-                                "quantity": barrels_purchased,
-                            })
+            if tot_gold >= barrel.price * barrel.quantity:
+                print("BUYING BLUE BARREL:", barrel.quantity)
+                barrels_purchased += barrel.quantity
+                barrel.quantity -= barrels_purchased
+                tot_gold -= barrel.price
+                blue_ml += barrel.ml_per_barrel
+                if barrels_purchased > 0:
+                    barrels.append(
+                        {
+                            "sku": barrel.sku,
+                            "quantity": barrels_purchased,
+                        })
         # GREEN
         elif "green" in barrel.sku.lower():
-            if cur_green_potions < 10:
-                if cur_gold >= barrel.price * barrel.quantity and purchased_green_potions < 10:
-                    print("BUYING GREEN BARRELS:", barrel.quantity)
-                    barrels_purchased += barrel.quantity
-                    barrel.quantity -= barrels_purchased
-                    cur_gold -= barrel.price
-                    tot_green_ml += barrel.ml_per_barrel
-                    purchased_green_potions = tot_green_ml // 100
-                    if barrels_purchased > 0:
-                        barrels.append(
-                            {
-                                "sku": "SMALL_GREEN_BARREL",
-                                "quantity": barrels_purchased,
-                            })
+            if tot_gold >= barrel.price * barrel.quantity:
+                print("BUYING GREEN BARRELS:", barrel.quantity)
+                barrels_purchased += barrel.quantity
+                barrel.quantity -= barrels_purchased
+                tot_gold -= barrel.price
+                if barrels_purchased > 0:
+                    barrels.append(
+                        {
+                            "sku": barrel.sku,
+                            "quantity": barrels_purchased,
+                        })
     print(f"barrels:", barrels)
     return barrels
         
