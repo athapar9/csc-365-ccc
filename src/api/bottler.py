@@ -73,7 +73,7 @@ def get_bottle_plan():
         print("ordered potions:", ordered_potions)
         for potion in ordered_potions:
             inventory = 0
-            while (red_ml >= potion.type[0] and green_ml >= potion.type[1] and blue_ml >= potion.type[2] and dark_ml >= potion.type[3]):
+            while (inventory < 10 and red_ml >= potion.type[0] and green_ml >= potion.type[1] and blue_ml >= potion.type[2] and dark_ml >= potion.type[3]):
                 print("red_ml before: {red_ml} potion.type[0] before:", {potion.type[0]})
                 red_ml -= potion.type[0]
                 print("red_ml post: {red_ml} potion.type[0] post:", {potion.type[0]})
