@@ -70,7 +70,7 @@ def get_bottle_plan():
         ordered_potions = connection.execute(sqlalchemy.text("SELECT * FROM potions ORDER BY inventory"))
 
         bottles = []
-        print("ordered potions:", ordered_potions)
+        # print("ordered potions:", ordered_potions)
         for potion in ordered_potions:
             inventory = 0
             while (inventory < 5 and red_ml >= potion.type[0] and green_ml >= potion.type[1] and blue_ml >= potion.type[2] and dark_ml >= potion.type[3]):

@@ -32,13 +32,13 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
 
     for barrel in barrels_delivered:
         tot_gold += barrel.price * barrel.quantity
-        if barrel.potion_type == [1, 0, 0, 0]:
+        if barrel.potion_type == [1,0,0,0]:
             red_ml += barrel.ml_per_barrel * barrel.quantity
-        elif barrel.potion_type == [0, 1, 0, 0]:
+        elif barrel.potion_type == [0,1,0,0]:
             green_ml += barrel.ml_per_barrel * barrel.quantity
-        elif barrel.potion_type == [0, 0, 1, 0]:
+        elif barrel.potion_type == [0,0,1,0]:
             blue_ml += barrel.ml_per_barrel * barrel.quantity
-        elif barrel.potion_type == [0, 0, 0, 1]:
+        elif barrel.potion_type == [0,0,0,1]:
             dark_ml += barrel.ml_per_barrel * barrel.quantity
         else:
             raise Exception("Invalid potion type")
@@ -80,7 +80,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     for barrel in wholesale_catalog:
         barrels_purchased = 0
         if "red" in barrel.sku.lower():
-            if tot_gold >= barrel.price * barrel.quantity:
+            while tot_gold >= barrel.price * barrel.quantity:
                 print("BUYING RED BARREL:", barrel.quantity, barrel.ml_per_barrel)
                 barrels_purchased += barrel.quantity
                 barrel.quantity -= barrels_purchased
@@ -90,11 +90,14 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                     barrels.append(
                         {
                             "sku": barrel.sku,
-                            "quantity": barrels_purchased,
+                            "ml_per_barrel": barrel.ml_per_barrel,
+                            "potion_type": barrel.potion_type,
+                            "price": barrel.price,
+                            "quantity": barrels_purchased
                         })
         #BLUE
-        if "blue" in barrel.sku.lower():
-            if tot_gold >= barrel.price * barrel.quantity:
+        elif "blue" in barrel.sku.lower():
+            while tot_gold >= barrel.price * barrel.quantity:
                 print("BUYING BLUE BARREL:", barrel.quantity, barrel.ml_per_barrel)
                 barrels_purchased += barrel.quantity
                 barrel.quantity -= barrels_purchased
@@ -104,11 +107,14 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                     barrels.append(
                         {
                             "sku": barrel.sku,
-                            "quantity": barrels_purchased,
+                            "ml_per_barrel": barrel.ml_per_barrel,
+                            "potion_type": barrel.potion_type,
+                            "price": barrel.price,
+                            "quantity": barrels_purchased
                         })
         # GREEN
         elif "green" in barrel.sku.lower():
-            if tot_gold >= barrel.price * barrel.quantity:
+            while tot_gold >= barrel.price * barrel.quantity:
                 print("BUYING GREEN BARRELS:", barrel.quantity, barrel.ml_per_barrel)
                 barrels_purchased += barrel.quantity
                 barrel.quantity -= barrels_purchased
@@ -118,8 +124,10 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                     barrels.append(
                         {
                             "sku": barrel.sku,
-                            "quantity": barrels_purchased,
+                            "ml_per_barrel": barrel.ml_per_barrel,
+                            "potion_type": barrel.potion_type,
+                            "price": barrel.price,
+                            "quantity": barrels_purchased
                         })
     print(f"barrels:", barrels)
     return barrels
-        
