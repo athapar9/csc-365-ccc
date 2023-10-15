@@ -70,13 +70,19 @@ def get_bottle_plan():
         ordered_potions = connection.execute(sqlalchemy.text("SELECT * FROM potions ORDER BY inventory"))
 
         bottles = []
-
+        print("ordered potions:", ordered_potions)
         for potion in ordered_potions:
             inventory = 0
             while (red_ml >= potion.type[0] and green_ml >= potion.type[1] and blue_ml >= potion.type[2] and dark_ml >= potion.type[3]):
+                print("red_ml before: {red_ml} potion.type[0] before:", {potion.type[0]})
                 red_ml -= potion.type[0]
+                print("red_ml post: {red_ml} potion.type[0] post:", {potion.type[0]})
+                print("green_ml pre: {green_ml} potion.type[1] pre:", {potion.type[1]})
                 green_ml -= potion.type[1]
+                print("green_ml post: {green_ml} potion.type[1] post:", {potion.type[1]})
+                print("blue_ml pre: {blue_ml} potion.type[2] pre:", {potion.type[2]})
                 blue_ml -= potion.type[2]
+                print("blue_ml pre: {blue_ml} potion.type[2] post:", {potion.type[2]})
                 dark_ml -= potion.type[3]
                 inventory += 1
             
@@ -86,6 +92,6 @@ def get_bottle_plan():
                             "potion_type": potion.type,
                             "quantity": inventory,
                         })
-                        
+
         print(f"bottles:", bottles)
         return bottles
