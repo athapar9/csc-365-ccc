@@ -96,7 +96,7 @@ def get_bottle_plan():
             if inventory > 0:
                 bottles.append(
                         {
-                            "potion_type": [potion.type[0], potion.type[1], potion.type[2], potion.type[3]],
+                            "potion_type": potion.type,
                             "quantity": inventory,
                         })
                 # print("red_ml", red_ml)
