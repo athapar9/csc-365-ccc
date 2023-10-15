@@ -19,7 +19,8 @@ def get_catalog():
         for row in result:
             catalog.append({
                 "sku": row.sku,
-                "inventory": row.inventory,
+                "name": row.name,
+                "quantity": row.inventory,
                 "price": row.price,
                 "potion_type": row.type,
             })

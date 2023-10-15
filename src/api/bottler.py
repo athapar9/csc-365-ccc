@@ -25,19 +25,6 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
         green_ml = sum(p.quantity * p.potion_type[1] for p in potions_delivered)
         blue_ml = sum(p.quantity * p.potion_type[2] for p in potions_delivered)
         dark_ml = sum(p.quantity * p.potion_type[3] for p in potions_delivered)
-        # print(potions.potion_type) 
-
-        # result = connection.execute(sqlalchemy.text("SELECT num_red_potions, num_red_ml, num_green_potions, num_green_ml, \
-        #     num_blue_potions, num_blue_ml FROM global_inventory"))
-        # first_row = result.first()
-
-        # #All Vars
-        # cur_red_ml = first_row.num_red_ml
-        # cur_red_potions = first_row.num_red_potions
-        # cur_green_ml = first_row.num_green_ml
-        # cur_green_potions = first_row.num_green_potions
-        # cur_blue_ml = first_row.num_blue_ml
-        # cur_blue_potions = first_row.num_blue_potions
         
         for potions in potions_delivered:
             connection.execute(
@@ -99,14 +86,6 @@ def get_bottle_plan():
                             "potion_type": potion.type,
                             "quantity": inventory,
                         })
-                # print("red_ml", red_ml)
-                # print("green_ml", green_ml)
-                # print("blue_ml", blue_ml)
-                # print("dark_ml", dark_ml)
-                # print("red_required", potion.type[0])
-                # print("green_required", potion.type[1])
-                # print("blue_required", potion.type[2])
-                # print("dark_required", potion.type[3])
-                # print("inventory", inventory)
+                        
         print(f"bottles:", bottles)
         return bottles
