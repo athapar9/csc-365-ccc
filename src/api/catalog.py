@@ -13,9 +13,8 @@ def get_catalog():
     
     # Can return a max of 20 items.
     with db.engine.begin() as connection:
-        result = connection.execute(sqlalchemy.text("SELECT sku, name, inventory, price, type FROM potions WHERE inventory > 0"))
+        result = connection.execute(sqlalchemy.text("SELECT sku, name, inventory, price, type FROM potions WHERE inventory > 0 LIMIT 6"))
         catalog = []
-
         for row in result:
             catalog.append({
                 "sku": row.sku,
