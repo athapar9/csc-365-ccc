@@ -80,7 +80,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     for barrel in wholesale_catalog:
         barrels_purchased = 0
         if "red" in barrel.sku.lower():
-            while tot_gold >= barrel.price * barrel.quantity:
+            while barrels_purchased < 1 and tot_gold >= barrel.price * barrel.quantity:
                 print("BUYING RED BARREL:", barrel.quantity, barrel.ml_per_barrel)
                 barrels_purchased += barrel.quantity
                 barrel.quantity -= barrels_purchased
