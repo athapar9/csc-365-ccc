@@ -83,7 +83,7 @@ def get_bottle_plan():
                 bottles.append(
                         {
                             "potion_type": potion.type,
-                            "quantity": inventory,
+                            "quantity": potion.inventory + inventory,
                         })
 
         print(f"bottles:", bottles)
