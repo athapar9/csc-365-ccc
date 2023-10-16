@@ -46,9 +46,8 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
                             green_ml = green_ml - :green_ml,
                             blue_ml = blue_ml - :blue_ml,
                             dark_ml = dark_ml - :dark_ml,
-                            total_potions = total_potions +:total_potions
                             """),
-            [{"red_ml": red_ml, "green_ml": green_ml, "blue_ml": blue_ml, "dark_ml": dark_ml, "total_potions": total_potions}])
+            [{"red_ml": red_ml, "green_ml": green_ml, "blue_ml": blue_ml, "dark_ml": dark_ml}])
     return "OK"
 
 # Gets called 4 times a day
