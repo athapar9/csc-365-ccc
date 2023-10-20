@@ -62,7 +62,7 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
 @router.post("/plan")
 def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     """ """
-    print(wholesale_catalog)
+    print(f"barrel catalog: {wholesale_catalog}")
     
     with db.engine.begin() as connection:
         result = connection.execute(sqlalchemy.text("SELECT red_ml, blue_ml, green_ml, gold FROM global_inventory"))
@@ -80,10 +80,10 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     for barrel in wholesale_catalog:
         barrels_purchased = 0
         if "red" in barrel.sku.lower():
-            while barrels_purchased < 10 and tot_gold >= barrel.price * barrel.quantity:
-                barrels_purchased += barrel.quantity
-                barrel.quantity -= barrels_purchased
-                tot_gold -= barrel.price*barrel.quantity
+            while barrel.quantity > 0 and tot_gold >= barrel.price and barrels_purchased < 2:
+                barrels_purchased += 1
+                barrel.quantity -= 1
+                tot_gold -= barrel.price
                 red_ml += barrel.ml_per_barrel
             if barrels_purchased > 0:
                 barrels.append(
@@ -96,10 +96,10 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                     })
         #BLUE
         elif "blue" in barrel.sku.lower():
-            while tot_gold >= barrel.price * barrel.quantity:
-                barrels_purchased += barrel.quantity
-                barrel.quantity -= barrels_purchased
-                tot_gold -= barrel.price*barrel.quantity
+            while barrel.quantity > 0 and tot_gold >= barrel.price and barrels_purchased < 2:
+                barrels_purchased += 1
+                barrel.quantity -= 1
+                tot_gold -= barrel.price
                 blue_ml += barrel.ml_per_barrel
             if barrels_purchased > 0:
                 barrels.append(
@@ -112,10 +112,10 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                     })
         # GREEN
         elif "green" in barrel.sku.lower():
-            while barrels_purchased < 10 and tot_gold >= barrel.price * barrel.quantity:
-                barrels_purchased += barrel.quantity
-                barrel.quantity -= barrels_purchased
-                tot_gold -= barrel.price*barrel.quantity
+            while barrel.quantity > 0 and tot_gold >= barrel.price and barrels_purchased < 2:
+                barrels_purchased += 1
+                barrel.quantity -= 1
+                tot_gold -= barrel.price
                 green_ml += barrel.ml_per_barrel
             if barrels_purchased > 0:
                 barrels.append(
@@ -126,5 +126,5 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                         "price": barrel.price,
                         "quantity": barrels_purchased
                     })
-    print(f"barrels:", barrels)
+    print(f"barrels: {barrels}")
     return barrels
