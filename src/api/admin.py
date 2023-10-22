@@ -27,7 +27,7 @@ def reset():
             tick_id = connection.execute(sqlalchemy.text("INSERT INTO ticks (description) VALUES (:description) RETURNING tick_id"), {"description": description}).scalar()
 
             connection.execute(sqlalchemy.text("INSERT INTO gold_ledger_items (gold_changed, tick_id) VALUES (100, :tick_id)"), {"tick_id": tick_id})
-            connection.execute(sqlalchemy.text("INSERT INTO barrel_ledger_items (tick_id, red_ml_changed, green_ml_changed, blue_ml_changed) VALUES (:tick_id, 0, 0, 0)"), {"tick_id": tick_id})
+            connection.execute(sqlalchemy.text("INSERT INTO barrel_ledger_items (tick_id, red_ml_changed, green_ml_changed, blue_ml_changed, dark_ml_changed) VALUES (:tick_id, 0, 0, 0, 0)"), {"tick_id": tick_id})
             for i in range(1, 8):
                 connection.execute(sqlalchemy.text("INSERT INTO potion_ledger_items (potion_changed, tick_id, potion_id) VALUES (0, :tick_id, :potion_id)"), {"tick_id": tick_id, "potion_id": i})       
 
