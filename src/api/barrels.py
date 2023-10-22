@@ -44,44 +44,44 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
         else:
             raise Exception("Invalid potion type")
 
-        date = datetime.now()
-        time = date.strftime("%m/%d/%Y %H:%M:%S")
+    date = datetime.now()
+    time = date.strftime("%m/%d/%Y %H:%M:%S")
 
-        # print(f"DELIVERING BARRELS AT: {time} gold_paid: {tot_gold} red_ml: {red_ml} blue_ml: {blue_ml} green_ml: {green_ml} dark_ml: {dark_ml}")
-        description = "BARRELS DELIVERED AT " + time + " red: " + str(red_ml) + " green: " + str(green_ml) + " blue: " + str(blue_ml)
-        print(description)
-        # with db.engine.begin() as connection:
-        #     connection.execute(
-        #         sqlalchemy.text(
-        #             """
-        #             UPDATE global_inventory SET 
-        #             red_ml = red_ml + :red_ml,
-        #             green_ml = green_ml + :green_ml,
-        #             blue_ml = blue_ml + :blue_ml,
-        #             dark_ml = dark_ml + :dark_ml,
-        #             gold = gold - :tot_gold
-        #             """),
-        #         [{"red_ml": red_ml, "green_ml": green_ml, "blue_ml": blue_ml, "dark_ml": dark_ml, "tot_gold": tot_gold}])
-        with db.engine.begin() as connection:
-            tick_id = connection.execute(sqlalchemy.text(
-                """INSERT INTO ticks (description) 
-                VALUES (:description) 
-                RETURNING tick_id"""), 
-                [{"description": description}]).scalar()
-            
-            connection.execute(sqlalchemy.text(
-                """INSERT INTO barrel_ledger_items (tick_id, red_ml_changed, green_ml_changed, blue_ml_changed) 
-                VALUES (:tick_id, :red_ml, :green_ml, :blue_ml)
-                """), 
-                [{"tick_id": tick_id, "red_ml": red_ml, "green_ml": green_ml, "blue_ml": blue_ml}])
+    # print(f"DELIVERING BARRELS AT: {time} gold_paid: {tot_gold} red_ml: {red_ml} blue_ml: {blue_ml} green_ml: {green_ml} dark_ml: {dark_ml}")
+    description = "BARRELS DELIVERED AT " + time + " red: " + str(red_ml) + " green: " + str(green_ml) + " blue: " + str(blue_ml)
+    print(description)
+    # with db.engine.begin() as connection:
+    #     connection.execute(
+    #         sqlalchemy.text(
+    #             """
+    #             UPDATE global_inventory SET 
+    #             red_ml = red_ml + :red_ml,
+    #             green_ml = green_ml + :green_ml,
+    #             blue_ml = blue_ml + :blue_ml,
+    #             dark_ml = dark_ml + :dark_ml,
+    #             gold = gold - :tot_gold
+    #             """),
+    #         [{"red_ml": red_ml, "green_ml": green_ml, "blue_ml": blue_ml, "dark_ml": dark_ml, "tot_gold": tot_gold}])
+    with db.engine.begin() as connection:
+        tick_id = connection.execute(sqlalchemy.text(
+            """INSERT INTO ticks (description) 
+            VALUES (:description) 
+            RETURNING tick_id"""), 
+            [{"description": description}]).scalar()
+        
+        connection.execute(sqlalchemy.text(
+            """INSERT INTO barrel_ledger_items (tick_id, red_ml_changed, green_ml_changed, blue_ml_changed) 
+            VALUES (:tick_id, :red_ml, :green_ml, :blue_ml)
+            """), 
+            [{"tick_id": tick_id, "red_ml": red_ml, "green_ml": green_ml, "blue_ml": blue_ml}])
 
 
-            connection.execute(sqlalchemy.text("""
-                                                INSERT INTO gold_ledger_items (gold_changed, tick_id)
-                                                VALUES (:gold, :tick_id)
-                                                 """), 
-                                                 [{"gold": -tot_gold, "tick_id": tick_id}])
-        return "OK"
+        connection.execute(sqlalchemy.text("""
+                                            INSERT INTO gold_ledger_items (gold_changed, tick_id)
+                                            VALUES (:gold, :tick_id)
+                                                """), 
+                                                [{"gold": -tot_gold, "tick_id": tick_id}])
+    return "OK"
 
 # Gets called once a day
 @router.post("/plan")
