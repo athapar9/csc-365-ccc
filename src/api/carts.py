@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from src.api import auth
 import sqlalchemy
 from src import database as db
+from datetime import datetime
 
 router = APIRouter(
     prefix="/carts",
@@ -64,16 +65,35 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
     gold_paid = 0
     potions_bought = 0
 
+    date = datetime.now()
+    time = date.strftime("%m/%d/%Y %H:%M:%S")
+
+    description = "CHECKOUT AT " + time + " cart_id: " + str(cart_id) + " payment: " + cart_checkout.payment
+    print(description)
+
     with db.engine.begin() as connection:
-        connection.execute(sqlalchemy.text(
+        tick_id = connection.execute(sqlalchemy.text(
             """
-            UPDATE potions
-            SET inventory = potions.inventory - cart_items.quantity
-            FROM cart_items
-            WHERE potions.potion_id = cart_items.potion_id and cart_items.cart_id = :cart_id;
-            """),
-            [{"cart_id": cart_id}])
+            INSERT INTO ticks (description)
+            VALUES (:description)
+            RETURNING tick_id
+            """), 
+            [{"description": description}]).scalar()
         
+        result = connection.execute(sqlalchemy.text(
+            """
+            SELECT quantity, potion_id
+            FROM cart_items
+            WHERE cart_items.cart_id = :cart_id
+            """), [{"cart_id": cart_id}])
+
+        for row in result:
+            connection.execute(sqlalchemy.text(
+            """
+            INSERT INTO potion_ledger (potion_changed, tick_id, potion_id)
+            VALUES (:potion_changed, :tick_id, :potion_id)
+            """), {"potion_changed": -row.quantity, "tick_id": tick_id, "potion_id": row.potion_id})
+
         result = connection.execute(sqlalchemy.text("SELECT SUM(potions.price * cart_items.quantity)\
              AS gold_paid, SUM(cart_items.quantity) \
                 AS potions_bought FROM potions JOIN cart_items \
@@ -84,12 +104,10 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
         gold_paid = first_row.gold_paid
         potions_bought = first_row.potions_bought
 
-        connection.execute(sqlalchemy.text("""
-            UPDATE global_inventory 
-            SET gold = gold + :gold_paid,
-            total_potions = total_potions - :potions_bought
-            """),
-            [{"potions_bought": potions_bought, "gold_paid": gold_paid}])
+        connection.execute(sqlalchemy.text(
+            """INSERT INTO gold_ledger_items (gold_changed, tick_id)
+            VALUES (:gold_changed, :tick_id)
+            """), {"gold_changed": gold_paid, "tick_id": tick_id})
 
     print("total_potions_bought:", {potions_bought}, "total_gold_paid:", {gold_paid})    
     return {"total_potions_bought": potions_bought, "total_gold_paid": gold_paid}
