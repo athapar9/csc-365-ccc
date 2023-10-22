@@ -19,13 +19,17 @@ def reset():
     #update gold to equal 100
     #update and then set 
     #update num_potions to 0 and ml to 0
-    with db.engine.begin() as connection:
-        connection.execute(sqlalchemy.text("UPDATE global_inventory SET red_ml = 0"))
-        connection.execute(sqlalchemy.text("UPDATE global_inventory SET gold = 100"))
-        connection.execute(sqlalchemy.text("UPDATE global_inventory SET blue_ml = 0"))
-        connection.execute(sqlalchemy.text("UPDATE global_inventory SET green_ml = 0"))
-        connection.execute(sqlalchemy.text("UPDATE global_inventory SET dark_ml = 0"))
-        connection.execute(sqlalchemy.text("UPDATE global_inventory SET total_potions = 0"))
+    with db.engine.begin() as connection: 
+            connection.execute(sqlalchemy.text("TRUNCATE ticks CASCADE"))           
+            connection.execute(sqlalchemy.text("TRUNCATE carts CASCADE"))
+
+            description = "RESET"
+            tick_id = connection.execute(sqlalchemy.text("INSERT INTO ticks (description) VALUES (:description) RETURNING tick_id"), {"description": description}).scalar()
+
+            connection.execute(sqlalchemy.text("INSERT INTO gold_ledger_items (gold_changed, tick_id) VALUES (100, :tick_id)"), {"tick_id": tick_id})
+            connection.execute(sqlalchemy.text("INSERT INTO barrel_ledger_items (tick_id, red_ml_changed, green_ml_changed, blue_ml_changed) VALUES (:tick_id, 0, 0, 0)"), {"tick_id": tick_id})
+            for i in range(1, 8):
+                connection.execute(sqlalchemy.text("INSERT INTO potion_ledger_items (potion_changed, tick_id, potion_id) VALUES (0, :tick_id, :potion_id)"), {"tick_id": tick_id, "potion_id": i})       
 
     return "OK"
 
@@ -37,7 +41,7 @@ def get_shop_info():
 
     # TODO: Change me!
     return {
-        "shop_name": "Potion Shop",
-        "shop_owner": "Potion Seller",
+        "shop_name": "Ananya's Potion Shop",
+        "shop_owner": "Ananya Thapar",
     }
 
