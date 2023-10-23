@@ -70,10 +70,10 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
             [{"description": description}]).scalar()
         
         connection.execute(sqlalchemy.text(
-            """INSERT INTO barrel_ledger_items (tick_id, red_ml_changed, green_ml_changed, blue_ml_changed) 
-            VALUES (:tick_id, :red_ml, :green_ml, :blue_ml)
+            """INSERT INTO barrel_ledger_items (tick_id, red_ml_changed, green_ml_changed, blue_ml_changed, dark_ml_changed) 
+            VALUES (:tick_id, :red_ml, :green_ml, :blue_ml, :dark_ml)
             """), 
-            [{"tick_id": tick_id, "red_ml": red_ml, "green_ml": green_ml, "blue_ml": blue_ml}])
+            [{"tick_id": tick_id, "red_ml": red_ml, "green_ml": green_ml, "blue_ml": blue_ml, "dark_ml": dark_ml}])
 
 
         connection.execute(sqlalchemy.text("""
