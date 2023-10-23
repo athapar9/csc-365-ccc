@@ -90,7 +90,7 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
         for row in result:
             connection.execute(sqlalchemy.text(
             """
-            INSERT INTO potion_ledger (potion_changed, tick_id, potion_id)
+            INSERT INTO potion_ledger_items (potion_changed, tick_id, potion_id)
             VALUES (:potion_changed, :tick_id, :potion_id)
             """), {"potion_changed": -row.quantity, "tick_id": tick_id, "potion_id": row.potion_id})
 
