@@ -86,8 +86,6 @@ def get_bottle_plan():
         first_row = result.first()
         tot_potions = first_row.total_potions 
 
-        print("potion types: ", potion_types)
-
         barrels = connection.execute(sqlalchemy.text(
             """
             SELECT SUM(red_ml_changed) AS red_ml, 
