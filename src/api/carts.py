@@ -4,6 +4,7 @@ from src.api import auth
 import sqlalchemy
 from src import database as db
 from datetime import datetime
+from enum import Enum
 
 router = APIRouter(
     prefix="/carts",
@@ -55,19 +56,46 @@ router = APIRouter(
 #     time is 5 total line items.
 #     """
 
-#     return {
-#         "previous": "",
-#         "next": "",
-#         "results": [
-#             {
-#                 "line_item_id": 1,
-#                 "item_sku": "1 oblivion potion",
-#                 "customer_name": "Scaramouche",
-#                 "line_item_total": 50,
-#                 "timestamp": "2021-01-01T00:00:00Z",
-#             }
-#         ],
-#     }
+#     if sort_col is search_sort_options.customer_name:
+#         order_by = db.cart.c.customer
+#     elif sort_col is search_sort_options.item_sku:
+#         order_by = db.potions.c.sku
+#     elif sort_col is search_sort_options.line_item_total:
+#         order_by = db.gold_ledger_items.c.charge
+#     else:
+#         order_by = db.ticks.c.created_at
+    
+#     if sort_order == search_sort_order.desc:
+#         order_by = order_by.desc()
+#     else:
+#         order_by = order_by.asc()
+    
+    # stmt = (
+    #     sqlalchemy.select(
+    #         db.potions.c.potion_id.label("potion_id"),
+    #         db.potions.c.sku.label("sku"),
+    #         db.carts.c.customer.label("customer"),
+    #         db.cart_items.c.quantity,
+    #         db.ticks.c.created_at.label("time"),
+    #         db.gold_ledger_items.c.gold_changed.label("gold")
+    #     )
+    #     .select_from(db.ticks
+    #         .join(db.gold_ledger_items, db.ticks.c.tick_id == db.gold_ledger_items.c.tick_id)
+    #         .join(db.cart_items, db.cart_items.c.cart_id == db.carts.c.cart_id)
+    #         .join(db.potion_ledger_items, db.ticks.c.tick_id == db.potion_ledger_items.c.tick_id)
+    #         .join(db.potions, db.potion_ledger_items.c.potion_id == db.potions.c.potion_id)
+    #     )
+    #     .where(db.ticks.c.description == 'CHECKOUT')
+    #     .order_by(order_by)
+    # )
+
+    # if customer_name != "":
+    #     stmt = stmt.where(db.carts.c.customer.ilike(f"%{customer_name}%"))
+    # if potion_sku != "":
+    #     stmt = stmt.where(db.potions.c.sku.ilike(f"%{potion_sku}%"))
+    
+
+
 
 class NewCart(BaseModel):
     customer: str
