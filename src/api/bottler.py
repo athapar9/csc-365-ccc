@@ -107,20 +107,19 @@ def get_bottle_plan():
 
         if bottles_per_type == 0 and bottles_possible > 0:
             bottles_per_type = bottles_possible
+        elif green_ml > 0 and red_ml == 0 and blue_ml == 0:
+            bottles_per_type = bottles_possible
         elif red_ml > 0 and blue_ml == 0 and  green_ml== 0:
             bottles_per_type = bottles_possible
         elif blue_ml > 0 and green_ml == 0 and red_ml == 0:
             bottles_per_type = bottles_possible  
-        elif green_ml > 0 and red_ml == 0 and blue_ml == 0:
-            bottles_per_type = bottles_possible
 
         for potion in ordered_potions:
             inventory = 0
             while (tot_potions < 300 and red_ml >= potion.type[0] and green_ml >= potion.type[1] and blue_ml >= potion.type[2] and dark_ml >= potion.type[3]):
                 print("BOTTLING: ", potion.type)
-                print("INVENTORY: ", inventory)
-                red_ml -= potion.type[0]
                 green_ml -= potion.type[1]
+                red_ml -= potion.type[0]
                 blue_ml -= potion.type[2]
                 dark_ml -= potion.type[3]
                 inventory += 1
