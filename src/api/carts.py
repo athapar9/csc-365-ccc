@@ -77,7 +77,7 @@ def search_orders(
         query += "WHERE potions.sku ILIKE :sku"
         res = {"sku": f"%{potion_sku}%"}
 
-    res["offset"] = search_page  # Replace offset_value with the desired offset
+    res["offset"] = search_page  
 
     sort_col_mapping = {
         search_sort_options.customer_name: "carts.customer",
