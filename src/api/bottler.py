@@ -120,7 +120,7 @@ def get_bottle_plan():
                 print("BOTTLING: ", potion.type)
                 blue_ml -= potion.type[2]
                 # red_ml -= potion.type[0]
-                green_ml -= potion.type[1]
+                # green_ml -= potion.type[1]
                 dark_ml -= potion.type[3]
                 inventory += 1
                 tot_potions += 1
