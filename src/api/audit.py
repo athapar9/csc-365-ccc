@@ -26,7 +26,7 @@ def get_inventory():
         result = connection.execute(sqlalchemy.text("SELECT SUM(gold_changed) AS gold FROM gold_ledger_items"))
         first_row = result.first()
         tot_gold = first_row.gold
-
+    print("number of potions:", {total_potions}, "gold:", {tot_gold})    
     return {"number_of_potions": total_potions, "ml_in_barrels": total_ml, "gold": tot_gold}
 
 
