@@ -12,90 +12,104 @@ router = APIRouter(
     dependencies=[Depends(auth.get_api_key)],
 )
 
-# class search_sort_options(str, Enum):
-#     customer_name = "customer_name"
-#     item_sku = "item_sku"
-#     line_item_total = "line_item_total"
-#     timestamp = "timestamp"
+class search_sort_options(str, Enum):
+    customer_name = "customer_name"
+    item_sku = "item_sku"
+    line_item_total = "line_item_total"
+    timestamp = "timestamp"
 
-# class search_sort_order(str, Enum):
-#     asc = "asc"
-#     desc = "desc"   
+class search_sort_order(str, Enum):
+    asc = "asc"
+    desc = "desc"   
 
-# @router.get("/search/", tags=["search"])
-# def search_orders(
-#     customer_name: str = "",
-#     potion_sku: str = "",
-#     search_page: str = "",
-#     sort_col: search_sort_options = search_sort_options.timestamp,
-#     sort_order: search_sort_order = search_sort_order.desc,
-# ):
+@router.get("/search/", tags=["search"])
+def search_orders(
+    customer_name: str = "",
+    potion_sku: str = "",
+    search_page: str = "",
+    sort_col: search_sort_options = search_sort_options.timestamp,
+    sort_order: search_sort_order = search_sort_order.desc,
+):
 
-#     """
-#     Search for cart line items by customer name and/or potion sku.
+    """
+    Search for cart line items by customer name and/or potion sku.
 
-#     Customer name and potion sku filter to orders that contain the 
-#     string (case insensitive). If the filters aren't provided, no
-#     filtering occurs on the respective search term.
+    Customer name and potion sku filter to orders that contain the 
+    string (case insensitive). If the filters aren't provided, no
+    filtering occurs on the respective search term.
 
-#     Search page is a cursor for pagination. The response to this
-#     search endpoint will return previous or next if there is a
-#     previous or next page of results available. The token passed
-#     in that search response can be passed in the next search request
-#     as search page to get that page of results.
+    Search page is a cursor for pagination. The response to this
+    search endpoint will return previous or next if there is a
+    previous or next page of results available. The token passed
+    in that search response can be passed in the next search request
+    as search page to get that page of results.
 
-#     Sort col is which column to sort by and sort order is the direction
-#     of the search. They default to searching by timestamp of the order
-#     in descending order.
+    Sort col is which column to sort by and sort order is the direction
+    of the search. They default to searching by timestamp of the order
+    in descending order.
 
-#     The response itself contains a previous and next page token (if
-#     such pages exist) and the results as an array of line items. Each
-#     line item contains the line item id (must be unique), item sku, 
-#     customer name, line item total (in gold), and timestamp of the order.
-#     Your results must be paginated, the max results you can return at any
-#     time is 5 total line items.
-#     """
+    The response itself contains a previous and next page token (if
+    such pages exist) and the results as an array of line items. Each
+    line item contains the line item id (must be unique), item sku, 
+    customer name, line item total (in gold), and timestamp of the order.
+    Your results must be paginated, the max results you can return at any
+    time is 5 total line items.
+    """
+    if search_page == "":
+        search_page = 0
 
-#     if sort_col is search_sort_options.customer_name:
-#         order_by = db.cart.c.customer
-#     elif sort_col is search_sort_options.item_sku:
-#         order_by = db.potions.c.sku
-#     elif sort_col is search_sort_options.line_item_total:
-#         order_by = db.gold_ledger_items.c.charge
-#     else:
-#         order_by = db.ticks.c.created_at
-    
-#     if sort_order == search_sort_order.desc:
-#         order_by = order_by.desc()
-#     else:
-#         order_by = order_by.asc()
-    
-    # stmt = (
-    #     sqlalchemy.select(
-    #         db.potions.c.potion_id.label("potion_id"),
-    #         db.potions.c.sku.label("sku"),
-    #         db.carts.c.customer.label("customer"),
-    #         db.cart_items.c.quantity,
-    #         db.ticks.c.created_at.label("time"),
-    #         db.gold_ledger_items.c.gold_changed.label("gold")
-    #     )
-    #     .select_from(db.ticks
-    #         .join(db.gold_ledger_items, db.ticks.c.tick_id == db.gold_ledger_items.c.tick_id)
-    #         .join(db.cart_items, db.cart_items.c.cart_id == db.carts.c.cart_id)
-    #         .join(db.potion_ledger_items, db.ticks.c.tick_id == db.potion_ledger_items.c.tick_id)
-    #         .join(db.potions, db.potion_ledger_items.c.potion_id == db.potions.c.potion_id)
-    #     )
-    #     .where(db.ticks.c.description == 'CHECKOUT')
-    #     .order_by(order_by)
-    # )
+    query = """
+        SELECT carts.customer, carts.created_at, potions.sku, cart_items.quantity, potions.price
+        FROM carts
+        JOIN cart_items ON cart_items.cart_id = carts.cart_id
+        JOIN potions ON cart_items.potion_id = potions.potion_id
+        """
 
-    # if customer_name != "":
-    #     stmt = stmt.where(db.carts.c.customer.ilike(f"%{customer_name}%"))
-    # if potion_sku != "":
-    #     stmt = stmt.where(db.potions.c.sku.ilike(f"%{potion_sku}%"))
-    
+    res = {}
 
+    if customer_name and potion_sku:
+        query += "WHERE carts.customer ILIKE :customer AND potions.sku ILIKE :sku"
+        res = {"customer": f"%{customer_name}%", "sku": f"%{potion_sku}%"}
+    elif customer_name:
+        query += "WHERE carts.customer ILIKE :customer"
+        res = {"customer": f"%{customer_name}%"}
+    elif potion_sku:
+        query += "WHERE potions.sku ILIKE :sku"
+        res = {"sku": f"%{potion_sku}%"}
 
+    res["offset"] = search_page  # Replace offset_value with the desired offset
+
+    sort_col_mapping = {
+        search_sort_options.customer_name: "carts.customer",
+        search_sort_options.item_sku: "cart_items.sku",
+        search_sort_options.line_item_total: "cart_items.quantity * potions.price",
+        search_sort_options.timestamp: "carts.created_at",
+    }
+
+    query += f"""
+        ORDER BY {sort_col_mapping[sort_col]}
+        {sort_order.value}
+        OFFSET :offset LIMIT 6;
+    """
+    search_res = []
+    with db.engine.begin() as connection:
+        result = connection.execute(sqlalchemy.text(query), res).all()
+        line_item_id = 1
+        for row in result:
+            search_res.append({
+                "line_item_id": line_item_id,
+                "item_sku": str(row.quantity) + " " + row.sku,
+                "customer_name": row.customer,
+                "line_item_total": row.quantity * row.price,
+                "timestamp": row.created_at,
+            })
+        line_item_id += 1
+
+    return {
+        "previous": str(int(search_page) - 5 if int(search_page) - 5 >= 0 else ""),
+        "next": str(int(search_page) + 5 if len(search_res) > 5 else ""),
+        "results": search_res,
+    }
 
 class NewCart(BaseModel):
     customer: str
@@ -123,7 +137,6 @@ def get_cart(cart_id: int):
 
 class CartItem(BaseModel):
     quantity: int
-
 
 @router.post("/{cart_id}/items/{item_sku}")
 def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
