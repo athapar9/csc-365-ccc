@@ -102,17 +102,17 @@ def get_bottle_plan():
         dark_ml = barrels.dark_ml
         total_ml = red_ml + green_ml + blue_ml + dark_ml
         
-        bottles_possible = (total_ml) // 100
-        bottles_per_type = bottles_possible // potion_types
+        potential_bottles = (total_ml) // 100
+        bottles_per_type = potential_bottles // potion_types
 
-        if bottles_per_type == 0 and bottles_possible > 0:
-            bottles_per_type = bottles_possible
+        if bottles_per_type == 0 and potential_bottles > 0:
+            bottles_per_type = potential_bottles
         elif green_ml > 0 and red_ml == 0 and blue_ml == 0:
-            bottles_per_type = bottles_possible
+            bottles_per_type = potential_bottles
         elif red_ml > 0 and blue_ml == 0 and  green_ml== 0:
-            bottles_per_type = bottles_possible
+            bottles_per_type = potential_bottles
         elif blue_ml > 0 and green_ml == 0 and red_ml == 0:
-            bottles_per_type = bottles_possible  
+            bottles_per_type = potential_bottles  
 
         for potion in ordered_potions:
             inventory = 0
