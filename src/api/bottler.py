@@ -79,7 +79,6 @@ def get_bottle_plan():
             
         bottles = [] 
         ordered_potions = result.fetchall()  
-        potion_types = len(ordered_potions)   
 
         result = connection.execute(sqlalchemy.text(
             "SELECT SUM(potion_changed) AS total_potions FROM potion_ledger_items"))
@@ -103,7 +102,7 @@ def get_bottle_plan():
         total_ml = red_ml + green_ml + blue_ml + dark_ml
         
         potential_bottles = (total_ml) // 100
-        bottles_per_type = potential_bottles // potion_types
+        bottles_per_type = potential_bottles // 6
 
         if bottles_per_type == 0 and potential_bottles > 0:
             bottles_per_type = potential_bottles
