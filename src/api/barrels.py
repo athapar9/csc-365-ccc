@@ -47,21 +47,9 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
     date = datetime.now()
     time = date.strftime("%m/%d/%Y %H:%M:%S")
 
-    # print(f"DELIVERING BARRELS AT: {time} gold_paid: {tot_gold} red_ml: {red_ml} blue_ml: {blue_ml} green_ml: {green_ml} dark_ml: {dark_ml}")
     description = "BARRELS DELIVERED AT " + time + " red: " + str(red_ml) + " green: " + str(green_ml) + " blue: " + str(blue_ml)
     print(description)
-    # with db.engine.begin() as connection:
-    #     connection.execute(
-    #         sqlalchemy.text(
-    #             """
-    #             UPDATE global_inventory SET 
-    #             red_ml = red_ml + :red_ml,
-    #             green_ml = green_ml + :green_ml,
-    #             blue_ml = blue_ml + :blue_ml,
-    #             dark_ml = dark_ml + :dark_ml,
-    #             gold = gold - :tot_gold
-    #             """),
-    #         [{"red_ml": red_ml, "green_ml": green_ml, "blue_ml": blue_ml, "dark_ml": dark_ml, "tot_gold": tot_gold}])
+
     with db.engine.begin() as connection:
         tick_id = connection.execute(sqlalchemy.text(
             """INSERT INTO ticks (description) 

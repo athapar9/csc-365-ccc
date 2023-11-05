@@ -117,9 +117,9 @@ def get_bottle_plan():
         for potion in ordered_potions:
             inventory = 0
             while (tot_potions < 300 and inventory < bottles_per_type and red_ml >= potion.type[0] and green_ml >= potion.type[1] and blue_ml >= potion.type[2] and dark_ml >= potion.type[3]):
-                green_ml -= potion.type[1]
                 blue_ml -= potion.type[2]
                 red_ml -= potion.type[0]
+                green_ml -= potion.type[1]
                 dark_ml -= potion.type[3]
                 inventory += 1
                 tot_potions += 1
