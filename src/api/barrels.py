@@ -119,9 +119,9 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     #Cap on Potions is 300
     potions_possible = 300 - tot_potions
     ml_possible = potions_possible * 100
-    red_possible = ml_possible // 3
-    blue_possible = ml_possible // 3
-    green_possible = ml_possible // 3
+    red_possible = ml_possible 
+    blue_possible = 0
+    green_possible = 0
 
     print("potions_possible:", potions_possible, "ml_possible:", ml_possible, \
         "red_possible:", red_possible, "blue_possible:", blue_possible, "green_possible:", green_possible)
@@ -131,8 +131,14 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
         for barrel in wholesale_catalog:
             print(barrel)
             barrels_purchased = 0
+            if "red" in barrel.sku.lower():
+                while red_possible > 0 and tot_gold >= barrel.price and barrels_purchased < barrel.quantity:
+                    barrels_purchased += 1
+                    tot_gold -= barrel.price
+                    red_possible -= barrel.ml_per_barrel
+                    barrel.quantity -= 1
             #BLUE
-            if "blue" in barrel.sku.lower():
+            elif "blue" in barrel.sku.lower():
                 while blue_possible > 0 and tot_gold >= barrel.price and barrels_purchased < barrel.quantity:
                     barrels_purchased += 1
                     tot_gold -= barrel.price
@@ -144,12 +150,6 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                     barrels_purchased += 1
                     tot_gold -= barrel.price
                     green_possible -= barrel.ml_per_barrel
-                    barrel.quantity -= 1
-            elif "red" in barrel.sku.lower():
-                while red_possible > 0 and tot_gold >= barrel.price and barrels_purchased < barrel.quantity:
-                    barrels_purchased += 1
-                    tot_gold -= barrel.price
-                    red_possible -= barrel.ml_per_barrel
                     barrel.quantity -= 1
             if barrels_purchased > 0:
                 barrels.append(
