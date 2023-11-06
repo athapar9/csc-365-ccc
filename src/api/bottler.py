@@ -75,6 +75,7 @@ def get_bottle_plan():
             FROM potions
             JOIN potion_ledger_items ON potions.potion_id = potion_ledger_items.potion_id
             GROUP BY potions.type
+            ORDER BY quantity
             """))
             
         bottles = [] 
