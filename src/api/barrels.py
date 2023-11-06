@@ -138,19 +138,19 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                     tot_gold -= barrel.price
                     red_possible -= barrel.ml_per_barrel
                     barrel.quantity -= 1
-            #BLUE
-            elif "blue" in barrel.sku.lower():
-                while blue_possible > 0 and tot_gold >= barrel.price and barrels_purchased < barrel.quantity:
-                    barrels_purchased += 1
-                    tot_gold -= barrel.price
-                    blue_possible -= barrel.ml_per_barrel
-                    barrel.quantity -= 1
             # GREEN
             elif "green" in barrel.sku.lower():
                 while green_possible > 0 and tot_gold >= barrel.price and barrels_purchased < barrel.quantity:
                     barrels_purchased += 1
                     tot_gold -= barrel.price
                     green_possible -= barrel.ml_per_barrel
+                    barrel.quantity -= 1
+             #BLUE
+            elif "blue" in barrel.sku.lower():
+                while blue_possible > 0 and tot_gold >= barrel.price and barrels_purchased < barrel.quantity:
+                    barrels_purchased += 1
+                    tot_gold -= barrel.price
+                    blue_possible -= barrel.ml_per_barrel
                     barrel.quantity -= 1
             elif "dark" in barrel.sku.lower():
                 while dark_possible > 0 and tot_gold >= barrel.price and barrels_purchased < barrel.quantity:
