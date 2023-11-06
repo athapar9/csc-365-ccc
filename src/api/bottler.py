@@ -131,7 +131,7 @@ def get_bottle_plan():
                         })
 
         if red_ml // 100 > 0:
-            remaining = 300 - total_potions
+            remaining = 300 - tot_potions
             if red_ml//100 <= remaining:
                 bottles.append(
                     {
@@ -139,10 +139,10 @@ def get_bottle_plan():
                         "quantity": red_ml//100
                     }
                 )
-                total_potions += red_ml // 100
+                tot_potions += red_ml // 100
 
         if green_ml // 100 > 0:
-            remaining = 300 - total_potions
+            remaining = 300 - tot_potions
             if green_ml//100 <= remaining:
                 bottles.append(
                     {
@@ -150,10 +150,10 @@ def get_bottle_plan():
                         "quantity": green_ml//100
                     }
                 )
-                total_potions += green_ml // 100
+                tot_potions += green_ml // 100
         
         if blue_ml // 100 > 0:
-            remaining = 300 - total_potions
+            remaining = 300 - tot_potions
             if blue_ml//100 <= remaining:
                 bottles.append(
                     {
@@ -161,7 +161,7 @@ def get_bottle_plan():
                         "quantity": blue_ml//100
                     }
                 )
-                total_potions += blue_ml // 100
+                tot_potions += blue_ml // 100
 
         print(f"bottles:", bottles)
         return bottles
