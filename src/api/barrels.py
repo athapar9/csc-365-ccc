@@ -119,9 +119,9 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     #Cap on Potions is 300
     potions_possible = 300 - tot_potions
     ml_possible = potions_possible * 100
-    red_possible = ml_possible // 3
-    blue_possible = ml_possible // 3
-    green_possible = ml_possible // 3
+    red_possible = 0
+    blue_possible = 0
+    green_possible = 0
     # dark_possible = ml_possible // 4
 
     print("potions_possible:", potions_possible, "ml_possible:", ml_possible, \
